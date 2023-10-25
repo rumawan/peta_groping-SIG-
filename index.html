@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="img/favicon/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="src/leaflet.css" />
+    <script src="src/leaflet.js"></script>
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
+    <style>
+      html {
+        height: 100%;
+      }
+      body {
+        padding: 0px;
+        margin: 0px;
+        height: 100%;
+      }
+      #container {
+        width: 100%;
+        height: 100%;
+      }
+      .map {
+        width: 100%;
+        height: 100%;
+      }
+      #basemaps-wrapper {
+        position: absolute;
+        top: 70px;
+        right: 10px;
+        z-index: 400;
+        background: white;
+        padding: 10px;
+      }
+      #basemaps {
+        margin-bottom: 5px;
+      }
+    </style>
+    <title>Provinsi NTB</title>
+  </head>
+  <body>
+    <div id="container">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+          <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="" />
+          Provinsi NTB
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Dropdown </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Register</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div id="map" class="map"></div>
+      <!-- 	    <div id="basemaps-wrapper" class="leaflet-bar">
+		  <select name="basemaps" id="basemaps" onChange="changeBasemap(basemaps)">
+		    <option value="Topographic">Topographic</option>
+		    <option value="Streets">Streets</option>
+		    <option value="NationalGeographic">National Geographic</option>
+		    <option value="Oceans">Oceans</option>
+		    <option value="Gray">Gray</option>
+		    <option value="DarkGray">Dark Gray</option>
+		    <option value="Imagery">Imagery</option>
+		    <option value="ImageryClarity">Imagery (Clarity)</option>
+		    <option value="ImageryFirefly">Imagery (Firefly)</option>
+		    <option value="ShadedRelief">Shaded Relief</option>
+		    <option value="Physical">Physical</option>
+		  </select>
+		</div> -->
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="awan gis/kerembong.js" type="text/javascript"></script>
+    <script src="awan gis/Durian.js" type="text/javascript"></script>
+    <script src="awan gis/loangmaka.js" type="text/javascript"></script>
+    <script src="awan gis/pendem.js" type="text/javascript"></script>
+    <script src="awan gis/setuta.js" type="text/javascript"></script>
+    <script src="awan gis/lomboktengahkab.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      //add map utama
+      var mymap = L.map("map").setView([-8.6822631, 116.1042606], 15);
+
+      // L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+      // 	maxZoom: 18,
+      // 	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+      // 		'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+      // 		'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      // 	id: 'mapbox.streets'
+      // }).addTo(mymap);
+      //##############################################//
+      // Membuat Icon Pada Peta
+      //##############################################//
+      var mapIcon = L.Icon.extend({
+        iconSize: [32, 37],
+      });
+      var masjidIcon = new mapIcon({ iconUrl: "icon/mosquee.png" }),
+        pasarIcon = new mapIcon({ iconUrl: "icon/market.png" }),
+        sekolahIcon = new mapIcon({ iconUrl: "icon/school.png" });
+
+      //##############################################//
+      // Mendeklarasikan Marker Masjid dan membuatnya menjadi
+      // Layer Group
+      //##############################################//
+
+      var mj1 = L.marker([-8.6784788, 116.3603648], { icon: masjidIcon }).bindPopup("Masjid Al_Mu'minun Irok");
+      var mj2 = L.marker([-8.6853156, 116.3658045], { icon: masjidIcon }).bindPopup("Masjid Al-Abror Kerembong'<img src='img/pasar-masjid.jpeg' alt='masjid Al Abror kerembong ' width='350px'/>");
+
+      var masjid = L.layerGroup([mj1, mj2]);
+
+      //##############################################//
+      // Mendeklarasikan Marker Sekolah dan membuatnya menjadi
+      // Layer Group
+      //##############################################//
+      var sk1 = L.marker([-8.6856194, 116.3658908], { icon: sekolahIcon }).bindPopup("SDN 1 Kerembong");
+      var sk2 = L.marker([-8.7054239, 116.3666448], { icon: sekolahIcon }).bindPopup("SDN 2 Kerembong");
+
+      var sekolah = L.layerGroup([sk1, sk2]);
+
+      //##############################################//
+      // Mendeklarasikan Marker Pasar dan membuatnya menjadi
+      // Layer Group
+      //##############################################//
+      var psr = L.marker([-8.6733465, 116.3739845], { icon: pasarIcon }).bindPopup("Pasar Beson");
+
+      var pasar = L.layerGroup([psr]);
+
+      //var popupRenteng = "";
+
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(mymap);
+
+      var satelit = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+        id: "mapbox.streets",
+        attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+      });
+      var streets = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        id: "mapbox.streets",
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      });
+      var satelit = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+        id: "mapbox.streets",
+        attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+      });
+      var baseLayers = {
+        Streets: streets,
+        Satelite: satelit,
+      };
+      var overlays = {
+        Masjid: masjid,
+        Sekolah: sekolah,
+        Pasar: pasar,
+      };
+      L.control.layers(baseLayers, overlays).addTo(mymap);
+
+      var marker1 = L.marker([-8.694634, 116.3601717]).addTo(mymap).bindPopup("<b>Ini adalah titik</b><br />Desa Kerembong").openPopup();
+      var popup = L.popup();
+      var marker2 = L.marker([-8.6714031, 116.3604001]).addTo(mymap).bindPopup("<b>Ini adalah Titik</b><br />Desa Durian.").openPopup();
+      var popup = L.popup();
+      var marker3 = L.marker([-8.6877194, 116.3684947]).addTo(mymap).bindPopup("<b>Ini adalah Titik</b><br />Desa Loang Maka.").openPopup();
+      var popup = L.popup();
+      var marker4 = L.marker([-8.6786561, 116.3729859]).addTo(mymap).bindPopup("<b>Ini adalah Titik</b><br />Desa Pendem.").openPopup();
+      var popup = L.popup();
+      var marker5 = L.marker([-8.708581, 116.3827316]).addTo(mymap).bindPopup("<b>Ini adalah Titik</b><br />Desa  Stuta.").openPopup();
+      var popup = L.popup();
+
+      function onEachFeature(feature, layer) {
+        var popupContent = "<p>Selamat datang di, Kecamatan janapria!</p>";
+
+        if (feature.properties && feature.properties.popupContent) {
+          popupContent += feature.properties.popupContent;
+        }
+
+        layer.bindPopup(popupContent);
+      }
+
+      L.geoJSON([kerembong, durian, loangmaka, pendem, stuta, lomboktengah], {
+        style: function (feature) {
+          return feature.properties && feature.properties.style;
+        },
+
+        onEachFeature: onEachFeature,
+
+        pointToLayer: function (feature, latlng) {
+          return L.circleMarker(latlng, {
+            radius: 8,
+            fillColor: "#ff7800",
+            color: "#000",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8,
+          });
+        },
+      }).addTo(mymap);
+    </script>
+  </body>
+</html>
